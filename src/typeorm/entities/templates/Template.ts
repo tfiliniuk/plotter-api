@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn, JoinTable } from 'typeorm';
 
 import { Site } from '../sites/Sites';
 
@@ -14,5 +14,16 @@ export class SiteTemplate {
   userId!: number;
 
   @ManyToMany(() => Site, (site: Site) => site.templates)
+  @JoinTable({
+    name: 'site_template',
+    joinColumn: {
+      name: 'template_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'site_id',
+      referencedColumnName: 'id',
+    },
+  })
   sites: Array<Site>;
 }

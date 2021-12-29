@@ -1,3 +1,4 @@
+import axios from 'axios';
 import 'firebase/compat/auth';
 import firebaseAdmin from 'firebase-admin';
 import firebase from 'firebase/compat/app';
@@ -86,7 +87,7 @@ export async function fSignInWithEmailAndPassword(email: string, password: strin
     };
   } catch (err) {
     if (err.code === 'auth/user-disabled') {
-      throw new CustomError(409, 'Raw', err.message);
+      throw CustomError.firebaseError(err.message);
     }
 
     throw CustomError.BadRequest('This email or password is not valid');
@@ -100,6 +101,30 @@ export async function fVerifyToken(idToken: string): Promise<{
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(idToken, true);
 
     return { uid: decodedToken.uid };
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function fRefreshToken(refreshToken: string): Promise<{
+  uid: string;
+  token: string;
+  refreshToken: string;
+} | null> {
+  try {
+    const { data } = await axios({
+      url: `https://securetoken.googleapis.com/v1/token?key=${process.env.API_KEY}`,
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data: `grant_type=refresh_token&refresh_token=${refreshToken}`,
+    });
+    return {
+      uid: data.user_id,
+      token: data.access_token,
+      refreshToken: data.refresh_token,
+    };
   } catch (error) {
     return null;
   }

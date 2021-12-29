@@ -33,13 +33,23 @@ export class Site {
   domain: string;
 
   @ManyToMany(() => SiteTemplate, (template: SiteTemplate) => template.sites)
-  @JoinTable()
+  @JoinTable({
+    name: 'site_template',
+    joinColumn: {
+      name: 'site_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'template_id',
+      referencedColumnName: 'id',
+    },
+  })
   templates: Array<SiteTemplate>;
 
   @Column()
   created_on: string;
 
-  @ManyToOne(() => User, (user: User) => user.sites)
+  @ManyToOne((__type) => User, (user: User) => user.sites)
   @JoinColumn({
     name: 'user_id',
   })

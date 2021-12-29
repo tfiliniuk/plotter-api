@@ -41,7 +41,7 @@ class AuthService {
     const userDto = new UserDto(user);
 
     const { token, refreshToken } = await fSignInWithEmailAndPassword(email, password);
-    return { token, refreshToken, userDto };
+    return { token, refreshToken, user: userDto };
   }
 }
 
