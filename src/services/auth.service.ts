@@ -5,6 +5,7 @@ import { userService } from 'services/user.service';
 import { User } from 'typeorm/entities/users/User';
 import { fCreateToken, fGetOrCreateUser, fSignInWithEmailAndPassword } from 'utils/firebase';
 import { CustomError } from 'utils/response/custom-error/CustomError';
+import { normalizeEmailAddress } from 'utils/normalize';
 
 class AuthService {
   async registration(email: string, password: string, first_name: string, last_name: string) {
@@ -42,6 +43,11 @@ class AuthService {
 
     const { token, refreshToken } = await fSignInWithEmailAndPassword(email, password);
     return { token, refreshToken, user: userDto };
+  }
+  async getByEmail(rawEmail?: string) {
+    const email = normalizeEmailAddress(rawEmail);
+    const user = await createQueryBuilder('user').where('LOWER(user.email) = :email', { email }).getOne();
+    return user ?? null;
   }
 }
 

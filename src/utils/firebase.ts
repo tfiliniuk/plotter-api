@@ -129,3 +129,11 @@ export async function fRefreshToken(refreshToken: string): Promise<{
     return null;
   }
 }
+
+export async function fResetPassword(email: string) {
+  try {
+    return await firebase.auth().sendPasswordResetEmail(email);
+  } catch (error) {
+    return null;
+  }
+}

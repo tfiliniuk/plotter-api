@@ -12,6 +12,7 @@
     "@types/helmet": "^4.0.0",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.11.12",
+    "@types/uuid": "^8.3.3",
     "@types/validator": "^13.7.0",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
@@ -48,13 +49,14 @@
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.41",
     "typeorm-naming-strategies": "^2.0.0",
+    "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },
   "scripts": {
     "start": "NODE_PATH=./dist node ./dist/index.js",
     "dev": "debug=* NODE_PATH=./src ts-node-dev --respawn ./src/index.ts",
     "start:dev": "nodemon src/index.ts",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/typeorm/config/ormconfig.ts",
     "prepare": "husky install",
     "lint": "eslint --max-warnings 0 --ext .js,ts src",
     "lint-staged-husky": "lint-staged",
